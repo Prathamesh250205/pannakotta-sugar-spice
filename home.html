@@ -215,6 +215,70 @@ footer{padding:90px 0 36px;border-top:1px solid var(--line-2)}
   .nm{font-size:20px}
   .mhead{flex-direction:column;align-items:flex-start;gap:6px}
 }
+/* keyboard and TV-remote focus */
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.oc:focus-visible{border-color:var(--ink-3)}
+.oc:focus-visible::before{transform:scaleX(1)}
+
+/* large monitors and 1080p TVs */
+@media (min-width:1700px){
+  body{font-size:18px}
+  .wrap{width:min(1560px,100% - 120px)}
+  .nav{height:96px}
+  .logo{font-size:32px}.logo small{font-size:12px}
+  .links{font-size:16px;gap:46px}
+  .icon-btn{width:50px;height:50px}.icon-btn svg{width:21px;height:21px}
+  .btn{height:56px;padding:0 28px;font-size:16px}.btn.sm{height:46px;padding:0 20px;font-size:15px}
+  .kicker{font-size:14px}
+  .hero h1{font-size:clamp(104px,6.6vw,140px)}
+  .lead{font-size:21px;max-width:560px}
+  .proof{font-size:15px}.proof b{font-size:44px}
+  #slot{height:min(860px,74vh)}
+  .caption{font-size:14px}.caption span{font-size:26px}
+  section{padding:160px 0}
+  .head h2{font-size:clamp(72px,4.8vw,110px)}.head p{font-size:19px;max-width:480px}
+  .fav{padding-right:44px}.fav+.fav{padding-left:44px}.fav .n{font-size:22px}.fav h3{font-size:42px}.fav p{font-size:18px}.fav .meta{font-size:15px}.fav .meta b{font-size:28px}
+  .tag{font-size:13px}
+  .menu-wrap{padding:76px 76px 64px}
+  .cat{height:48px;padding:0 22px;font-size:16px}
+  .mhead h3{font-size:58px}.mhead .src{font-size:15px}
+  .mlist{column-gap:96px}.mlist li{padding:28px 0}
+  .nm{font-size:28px}.pr{font-size:18px}.pr small{font-size:14px}.ds{font-size:16px}.vm{width:13px;height:13px}
+  .mnote{font-size:15px}
+  .oc{min-height:380px;padding:54px}.oc .brand{font-size:16px}.oc .go{width:64px;height:64px}.oc h3{font-size:80px}.oc p{font-size:16px}
+  .info{padding:58px}.info dt{font-size:13px}.info dd{font-size:30px}
+  .map{min-height:580px}
+  .ft .big{font-size:clamp(150px,10vw,220px)}.ft nav{font-size:16px}.copy{font-size:15px}
+}
+/* 4K TVs and very large displays */
+@media (min-width:2400px){
+  body{font-size:24px}
+  .wrap{width:min(2100px,100% - 200px)}
+  .nav{height:128px}
+  .logo{font-size:44px}.logo small{font-size:16px}
+  .links{font-size:21px;gap:60px}
+  .icon-btn{width:66px;height:66px}.icon-btn svg{width:28px;height:28px}
+  .btn{height:74px;padding:0 38px;font-size:21px;gap:14px}.btn .dot{width:11px;height:11px}.btn.sm{height:60px;padding:0 26px;font-size:20px}
+  .kicker{font-size:18px}
+  .hero h1{font-size:190px}
+  .lead{font-size:28px;max-width:760px}
+  .proof{font-size:20px}.proof b{font-size:58px}
+  .caption{font-size:18px}.caption span{font-size:34px}
+  section{padding:210px 0}
+  .head h2{font-size:clamp(110px,4.8vw,150px)}.head p{font-size:25px;max-width:640px}
+  .fav .n{font-size:28px}.fav h3{font-size:56px;margin-top:60px}.fav p{font-size:24px}.fav .meta{font-size:20px}.fav .meta b{font-size:38px}
+  .tag{font-size:17px}
+  .menu-wrap{padding:100px 100px 84px;border-radius:40px}
+  .cat{height:64px;padding:0 30px;font-size:21px}
+  .mhead h3{font-size:78px}.mhead .src{font-size:20px}
+  .mlist{column-gap:130px}.mlist li{padding:38px 0}
+  .nm{font-size:38px;gap:14px}.pr{font-size:24px}.pr small{font-size:18px}.ds{font-size:21px}.vm{width:17px;height:17px}
+  .mnote{font-size:20px}
+  .oc{min-height:500px;padding:72px;border-radius:40px}.oc .brand{font-size:21px}.oc .go{width:84px;height:84px}.oc h3{font-size:108px}.oc p{font-size:21px}
+  .info{padding:76px;border-radius:40px}.info dt{font-size:17px}.info dd{font-size:40px}
+  .map{min-height:760px;border-radius:40px}
+  .ft .big{font-size:300px}.ft nav{font-size:21px}.copy{font-size:20px}
+}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
