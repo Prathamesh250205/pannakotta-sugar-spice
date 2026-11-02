@@ -433,7 +433,9 @@ const MENU=[
   ]},
 ];
 const catsEl=document.getElementById('cats'),mbody=document.getElementById('mbody');
-let cur=MENU[0].id;
+// links like home.html#menu-pizza open that tab
+const deep=(location.hash.match(/^#menu-([a-z]+)$/)||[])[1];
+let cur=MENU.some(c=>c.id===deep)?deep:MENU[0].id;
 function price(it,c){
   if(!it.v)return `<span class="pr">₹${it.p}</span>`;
   const l=c.cols?[]:it.lbl||[];
@@ -449,6 +451,7 @@ function render(){
 }
 catsEl.addEventListener('click',e=>{const b=e.target.closest('.cat');if(!b)return;cur=b.dataset.id;render();catsEl.querySelector('.on').scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'})});
 render();
+if(deep){const go=()=>scrollTo({top:document.getElementById('menu').offsetTop-20,behavior:'instant'});go();addEventListener('load',go);document.fonts.ready.then(go)}
 
 /* ============ THEME ============ */
 const root=document.documentElement,mq=matchMedia('(prefers-color-scheme: dark)');
