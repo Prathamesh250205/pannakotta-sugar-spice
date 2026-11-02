@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PannaKotta – Sugar & Spice</title>
+<meta name="description" content="PannaKotta – Sugar & Spice. Café & bakehouse on 7th Lane, Rajarampuri, Kolhapur. Thin-crust pizzas, burritos, Thai bowls, cakes and pannacotta.">
+<script>
+  // apply saved theme before paint; otherwise CSS follows the system setting
+  try{const t=localStorage.getItem('pk-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4ede3; --surface:#fbf7f1; --ink:#2a1d17; --ink-2:#5c4a40; --ink-3:#8c786b;
+  --line:rgba(42,29,23,.14); --line-2:rgba(42,29,23,.08);
+  --accent:#9c2f45; --accent-ink:#fbf7f1; --gold:#a8834f;
+  --veg:#3f8a4a; --nonveg:#b23a2e;
+  --sh-a:#f4ede3; --sh-b:#ead6c8; --sh-c:#fbf6ee;
+  --header:rgba(244,237,227,.86);
+  --serif:'Cormorant Garamond',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#15100d; --surface:#1d1612; --ink:#efe5d6; --ink-2:#c3b3a1; --ink-3:#8d7c6d;
+    --line:rgba(239,229,214,.14); --line-2:rgba(239,229,214,.07);
+    --accent:#d9788a; --accent-ink:#15100d; --gold:#c9a46c;
+    --veg:#6cbf73; --nonveg:#e06a5c;
+    --sh-a:#15100d; --sh-b:#2a1a16; --sh-c:#1f1612;
+    --header:rgba(21,16,13,.84);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15100d; --surface:#1d1612; --ink:#efe5d6; --ink-2:#c3b3a1; --ink-3:#8d7c6d;
+  --line:rgba(239,229,214,.14); --line-2:rgba(239,229,214,.07);
+  --accent:#d9788a; --accent-ink:#15100d; --gold:#c9a46c;
+  --veg:#6cbf73; --nonveg:#e06a5c;
+  --sh-a:#15100d; --sh-b:#2a1a16; --sh-c:#1f1612;
+  --header:rgba(21,16,13,.84);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .5s,color .5s}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--accent);color:var(--accent-ink)}
+
+#scene{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+#scene.on{opacity:1}
+header,main,footer{position:relative;z-index:1}
+.wrap{width:min(1180px,100% - 32px);margin-inline:auto}
+
+/* type helpers */
+.kicker{font-size:12px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+.display{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;line-height:1.02}
+.display em{font-style:italic;color:var(--accent)}
+
+/* header */
+header{position:fixed;inset:0 0 auto;z-index:20;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+header.solid{background:var(--header);backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-color:var(--line-2)}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:.01em;line-height:1}
+.logo small{display:block;font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-3);margin-top:5px}
+.links{display:flex;gap:36px;font-size:14px;color:var(--ink-2)}
+.links a{transition:color .25s}
+.links a:hover{color:var(--ink)}
+.nav-r{display:flex;align-items:center;gap:10px}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-2);transition:border-color .25s,color .25s}
+.icon-btn:hover{border-color:var(--ink-3);color:var(--ink)}
+.icon-btn svg{width:17px;height:17px}
+.i-sun{display:none}
+[data-mode="dark"] .i-sun{display:block}[data-mode="dark"] .i-moon{display:none}
+.burger{display:none}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 22px;border-radius:999px;font-size:14px;font-weight:500;border:1px solid var(--line);transition:background .25s,border-color .25s,color .25s}
+.btn:hover{border-color:var(--ink-3)}
+.btn .dot{width:8px;height:8px;border-radius:50%}
+.btn.solid{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.solid:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{height:38px;padding:0 16px;font-size:13px}
+.z{background:#e23744}.s{background:#fc8019}
+.arrow{transition:transform .25s}
+.btn:hover .arrow{transform:translateX(3px)}
+
+/* hero */
+.hero{min-height:100vh;min-height:100svh;display:grid;align-items:center;padding:110px 0 60px}
+.hero .wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(52px,7.2vw,104px);margin:22px 0 26px}
+.hero h1 .l{display:block;overflow:hidden;padding-bottom:.06em}
+.hero h1 .l>span{display:block;transform:translateY(105%);transition:transform 1.3s cubic-bezier(.2,.75,.15,1)}
+.hero h1 .l:nth-child(2)>span{transition-delay:.1s}.hero h1 .l:nth-child(3)>span{transition-delay:.2s}
+.lead{max-width:440px;color:var(--ink-2);font-size:17px;line-height:1.7}
+.ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
+.proof{display:flex;align-items:center;gap:14px;margin-top:40px;font-size:13px;color:var(--ink-3);line-height:1.4}
+.proof b{font-family:var(--serif);font-size:34px;font-weight:500;color:var(--ink);line-height:1}
+.proof i{width:1px;height:28px;background:var(--line)}
+.fade{opacity:0;transform:translateY(14px);transition:opacity 1s ease,transform 1s ease}
+.ready .hero h1 .l>span{transform:none}
+.ready .fade{opacity:1;transform:none}
+.d1{transition-delay:.35s}.d2{transition-delay:.5s}.d3{transition-delay:.65s}
+#slot{height:min(640px,72vh);position:relative}
+.caption{position:absolute;right:0;bottom:2%;text-align:right;font-size:12px;color:var(--ink-3);letter-spacing:.06em}
+.caption span{display:block;font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink-2);letter-spacing:0}
+
+/* sections */
+section{padding:120px 0}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:56px}
+.head h2{font-size:clamp(42px,5.4vw,72px)}
+.head p{max-width:380px;color:var(--ink-2)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 1s ease,transform 1s cubic-bezier(.2,.75,.15,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* favourites */
+.favs{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.fav{padding:34px 30px 40px 0;border-right:1px solid var(--line-2)}
+.fav+.fav{padding-left:30px}
+.fav:last-child{border-right:0}
+.fav .n{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink-3)}
+.fav h3{font-family:var(--serif);font-weight:500;font-size:32px;line-height:1.1;margin:44px 0 12px}
+.fav p{color:var(--ink-2);font-size:15px}
+.fav .meta{display:flex;justify-content:space-between;align-items:center;margin-top:24px;font-size:13px;color:var(--ink-3)}
+.fav .meta b{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--ink)}
+.tag{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:3px 10px;line-height:1.4}
+
+/* menu */
+.menu-wrap{background:var(--surface);border:1px solid var(--line-2);border-radius:28px;padding:56px 56px 48px;transition:background .5s}
+.cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -8px 44px;padding:0 8px}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex:none;height:38px;padding:0 16px;border-radius:999px;font-size:14px;color:var(--ink-2);border:1px solid transparent;transition:.25s}
+.cat:hover{color:var(--ink)}
+.cat.on{border-color:var(--line);color:var(--ink);background:var(--bg)}
+.mhead{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.mhead h3{font-family:var(--serif);font-weight:500;font-size:clamp(32px,3.6vw,44px);line-height:1}
+.mhead .src{font-size:13px;color:var(--ink-3)}
+.mlist{list-style:none;display:grid;grid-template-columns:1fr 1fr;column-gap:64px}
+.mlist li{padding:22px 0;border-bottom:1px solid var(--line-2);animation:in .6s ease both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.row{display:flex;align-items:baseline;gap:10px}
+.nm{font-family:var(--serif);font-size:22px;font-weight:500;line-height:1.25;display:flex;align-items:baseline;gap:10px}
+.leader{flex:1;border-bottom:1px dotted var(--line);transform:translateY(-5px);min-width:16px}
+.pr{font-variant-numeric:tabular-nums;font-size:15px;font-weight:500;white-space:nowrap}
+.pr small{color:var(--ink-3);font-weight:400;font-size:12px;margin-right:3px}
+.ds{color:var(--ink-3);font-size:14px;line-height:1.55;margin-top:6px;max-width:44ch}
+.vm{flex:none;width:11px;height:11px;border:1.2px solid var(--veg);border-radius:2px;position:relative;top:-1px}
+.vm::after{content:"";position:absolute;inset:2.2px;border-radius:50%;background:var(--veg)}
+.vm.nv{border-color:var(--nonveg)}.vm.nv::after{background:var(--nonveg)}
+.mnote{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:30px;font-size:13px;color:var(--ink-3)}
+.mnote b{color:var(--ink-2);font-weight:500}
+
+/* order */
+.order-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.oc{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:300px;padding:40px;border-radius:28px;border:1px solid var(--line);background:var(--surface);overflow:hidden;transition:border-color .35s,transform .5s cubic-bezier(.2,.75,.15,1)}
+.oc::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--brand);transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.2,.75,.15,1)}
+.oc:hover{transform:translateY(-4px);border-color:var(--ink-3)}
+.oc:hover::before{transform:scaleX(1)}
+.oc .top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.oc .brand{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--ink-2)}
+.oc .brand i{flex:none;width:12px;height:12px;border-radius:50%;background:var(--brand)}
+.oc .go{flex:none;width:52px;height:52px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:background .35s,color .35s,border-color .35s}
+.oc:hover .go{background:var(--brand);border-color:var(--brand);color:#fff}
+.oc h3{font-family:var(--serif);font-weight:400;font-size:clamp(40px,4.6vw,60px);line-height:1}
+.oc p{color:var(--ink-3);font-size:14px;margin-top:10px}
+
+/* visit */
+.visit-grid{display:grid;grid-template-columns:5fr 7fr;gap:20px}
+.info{padding:44px;border-radius:28px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column}
+.info dt{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin-top:26px}
+.info dd{font-family:var(--serif);font-size:24px;line-height:1.3;margin-top:6px}
+.info .acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:36px}
+.map{border-radius:28px;overflow:hidden;border:1px solid var(--line);min-height:460px;position:relative}
+.map iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+[data-mode="dark"] .map iframe{filter:invert(.9) hue-rotate(180deg) saturate(.6) brightness(.95)}
+
+footer{padding:90px 0 36px;border-top:1px solid var(--line-2)}
+.ft{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap}
+.ft .big{font-family:var(--serif);font-size:clamp(64px,11vw,150px);line-height:.85;letter-spacing:-.02em}
+.ft .big em{color:var(--accent)}
+.ft nav{display:flex;gap:28px;font-size:14px;color:var(--ink-2);flex-wrap:wrap}
+.ft nav a:hover{color:var(--ink)}
+.copy{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:56px;padding-top:24px;border-top:1px solid var(--line-2);font-size:13px;color:var(--ink-3)}
+
+/* mobile nav */
+.mnav{position:fixed;inset:0;z-index:15;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:0 32px;gap:8px;opacity:0;visibility:hidden;transition:.35s}
+.mnav.on{opacity:1;visibility:visible}
+.mnav>a{font-family:var(--serif);font-size:44px;line-height:1.3}
+.mnav .ctas{margin-top:30px}
+
+@media (max-width:980px){
+  .links,.nav-r .btn{display:none}
+  .burger{display:grid}
+  .hero{padding-top:100px}
+  .hero .wrap{grid-template-columns:1fr;gap:0}
+  #slot{height:420px;margin-top:10px}
+  .caption{display:none}
+  .head{flex-direction:column;align-items:flex-start}
+  .favs{grid-template-columns:1fr}
+  .fav,.fav+.fav{padding:30px 0;border-right:0;border-bottom:1px solid var(--line-2)}
+  .fav h3{margin-top:18px}
+  .menu-wrap{padding:36px 20px 30px;border-radius:22px}
+  .mlist{grid-template-columns:1fr}
+  .order-grid,.visit-grid{grid-template-columns:1fr}
+  .oc{min-height:220px;padding:30px}
+  .info{padding:32px 24px}
+  .map{min-height:360px}
+  section{padding:90px 0}
+}
+@media (max-width:480px){
+  .nm{font-size:20px}
+  .mhead{flex-direction:column;align-items:flex-start;gap:6px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#top" class="logo">PannaKotta<small>Sugar &amp; Spice</small></a>
+    <nav class="links"><a href="#favourites">Favourites</a><a href="#menu">Menu</a><a href="#order">Order</a><a href="#visit">Visit</a></nav>
+    <div class="nav-r">
+      <a class="btn sm" href="https://www.zomato.com/kolhapur/pannakotta-sugar-spice-rajarampuri/order" target="_blank" rel="noopener"><span class="dot z"></span>Zomato</a>
+      <a class="btn sm" href="https://www.swiggy.com/city/kolhapur/pannakotta-sugar-and-spice-7th-lane-rest96363" target="_blank" rel="noopener"><span class="dot s"></span>Swiggy</a>
+      <button class="icon-btn" id="theme" aria-label="Toggle dark mode">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn burger" id="burger" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h16M4 16h16"/></svg></button>
+    </div>
+  </div>
+</header>
+<nav class="mnav" id="mnav">
+  <a href="#favourites">Favourites</a><a href="#menu">Menu</a><a href="#order">Order</a><a href="#visit">Visit</a>
+  <div class="ctas">
+    <a class="btn" href="https://www.zomato.com/kolhapur/pannakotta-sugar-spice-rajarampuri/order" target="_blank" rel="noopener"><span class="dot z"></span>Zomato</a>
+    <a class="btn" href="https://www.swiggy.com/city/kolhapur/pannakotta-sugar-and-spice-7th-lane-rest96363" target="_blank" rel="noopener"><span class="dot s"></span>Swiggy</a>
+  </div>
+</nav>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="kicker fade">Café &amp; Bakehouse · Rajarampuri, Kolhapur</p>
+        <h1 class="display"><span class="l"><span>A little sugar,</span></span><span class="l"><span>a little <em>spice</em>,</span></span><span class="l"><span>all heart.</span></span></h1>
+        <p class="lead fade d1">Thin-crust pizzas, cheesy burritos, Thai bowls, truffle cakes and our namesake berry pannacotta — made fresh on 7th Lane.</p>
+        <div class="ctas fade d2">
+          <a class="btn solid" href="https://www.zomato.com/kolhapur/pannakotta-sugar-spice-rajarampuri/order" target="_blank" rel="noopener"><span class="dot z"></span>Order on Zomato <span class="arrow">→</span></a>
+          <a class="btn" href="https://www.swiggy.com/city/kolhapur/pannakotta-sugar-and-spice-7th-lane-rest96363" target="_blank" rel="noopener"><span class="dot s"></span>Order on Swiggy <span class="arrow">→</span></a>
+        </div>
+        <div class="proof fade d3"><b>4.6</b><span>Zomato delivery rating<br>from 5,900+ ratings</span><i></i><a href="#menu" style="text-decoration:underline;text-underline-offset:4px">See the menu</a></div>
+      </div>
+      <div id="slot"><div class="caption fade d3"><span>Berry Pannacotta</span>The one we're named after</div></div>
+    </div>
+  </section>
+
+  <section id="favourites" style="padding-top:40px">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="display">House <em>favourites</em></h2>
+        <p>If it's your first visit, start here. Three things regulars keep coming back for.</p>
+      </div>
+      <div class="favs reveal">
+        <article class="fav"><span class="n">i.</span><h3>Classic Cheese Pocket</h3><p>Our must-try. Golden, crisp and stuffed with molten cheese — also available Jain.</p><div class="meta"><span class="tag">Must try</span><b>₹90</b></div></article>
+        <article class="fav"><span class="n">ii.</span><h3>Hot n Tangy Paneer Pizza</h3><p>Thin, crackly crust loaded with spiced paneer and a tangy kick.</p><div class="meta"><span>Regular · Medium ₹280</span><b>₹180</b></div></article>
+        <article class="fav"><span class="n">iii.</span><h3>Berry Pannacotta</h3><p>Silky set cream under a glossy berry coulis. Light, cool and hard to share.</p><div class="meta"><span>Dessert</span><b>₹209</b></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu" style="padding-top:40px">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="display">The <em>menu</em></h2>
+        <p>Café prices from our printed menu. Cakes, desserts and drinks are shown at Zomato delivery prices.</p>
+      </div>
+      <div class="menu-wrap reveal">
+        <div class="cats" id="cats" role="tablist"></div>
+        <div id="mbody"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="order" style="padding-top:40px">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="display">Order <em>in</em></h2>
+        <p>Delivered across Kolhapur through Zomato and Swiggy. Pick whichever app you prefer.</p>
+      </div>
+      <div class="order-grid">
+        <a class="oc reveal" style="--brand:#e23744" href="https://www.zomato.com/kolhapur/pannakotta-sugar-spice-rajarampuri/order" target="_blank" rel="noopener">
+          <div class="top"><span class="brand"><i></i>4.6 delivery rating · 5,952 ratings</span><span class="go">→</span></div>
+          <div><h3>Zomato</h3><p>Full menu including cakes, pastries and shakes</p></div>
+        </a>
+        <a class="oc reveal" style="--brand:#fc8019" href="https://www.swiggy.com/city/kolhapur/pannakotta-sugar-and-spice-7th-lane-rest96363" target="_blank" rel="noopener">
+          <div class="top"><span class="brand"><i></i>Delivery across Kolhapur</span><span class="go">→</span></div>
+          <div><h3>Swiggy</h3><p>PannaKotta – Sugar &amp; Spice, 7th Lane</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit" style="padding-top:40px">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="display">Find <em>us</em></h2>
+        <p>On the bus route, 7th Lane, Rajarampuri. The pin on the map is exact.</p>
+      </div>
+      <div class="visit-grid">
+        <div class="info reveal">
+          <p class="kicker">PannaKotta – Sugar &amp; Spice</p>
+          <dl>
+            <dt>Address</dt><dd>Atharva Avenue, 7th Lane, bus route,<br>Rajarampuri, Kolhapur</dd>
+            <dt>Phone</dt><dd><a href="tel:+917038203900">+91 70382 03900</a></dd>
+            <dt>Takeaway</dt><dd>₹10 parcel charge per parcel</dd>
+          </dl>
+          <div class="acts">
+            <a class="btn solid" href="https://www.google.com/maps/dir/?api=1&destination=16.694855,74.244111" target="_blank" rel="noopener">Get directions <span class="arrow">→</span></a>
+            <a class="btn" href="tel:+917038203900">Call</a>
+          </div>
+        </div>
+        <div class="map reveal">
+          <iframe loading="lazy" title="PannaKotta on Google Maps" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=16.694855,74.244111&z=17&output=embed"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="ft">
+      <div class="big">Panna<em>Kotta</em></div>
+      <nav><a href="#menu">Menu</a><a href="https://www.zomato.com/kolhapur/pannakotta-sugar-spice-rajarampuri/order" target="_blank" rel="noopener">Zomato</a><a href="https://www.swiggy.com/city/kolhapur/pannakotta-sugar-and-spice-7th-lane-rest96363" target="_blank" rel="noopener">Swiggy</a><a href="https://www.google.com/maps/dir/?api=1&destination=16.694855,74.244111" target="_blank" rel="noopener">Directions</a></nav>
+    </div>
+    <div class="copy"><span>© <span id="yr"></span> PannaKotta – Sugar &amp; Spice, Rajarampuri</span><span>Prices in ₹ and subject to change</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ============ MENU ============
+   p: single price · v: prices per column · lbl: labels when the category has no shared columns · nv: non-veg
+   src 'cafe' = printed menu card, 'zomato' = Zomato delivery menu */
+const MENU=[
+  {id:'tried',t:'Have you tried it…',src:'cafe',cols:['Without meal','With meal'],items:[
+    {n:'Classic Cheese Pocket',tag:'Must try',v:[90,120]},
+    {n:'Indian Paneer Burrito',d:'Vegetables and paneer tossed in spices, topped with garlic sauce and cheese, rolled in a tortilla.',v:[140,170]},
+    {n:'Mushroom & Cheese Burrito',d:'Sautéed mushrooms and spicy caramelised onions in béchamel, topped with cheese and salsa in a tortilla.',v:[140,170]},
+    {n:'Quesadillas',d:'Sautéed vegetables, baked beans, jalapeños, salsa and cheese folded in a tortilla and pan grilled.',p:150},
+  ],note:'Add cheese @ ₹20 · Add aioli dip / salsa / paneer @ ₹20'},
+  {id:'pizza',t:'Thin-crust pizzas',src:'cafe',cols:['Regular','Medium'],items:[
+    {n:'Indian Bell Pepper Pizza',d:'Spicy onion, capsicum and tomato preparation with cheese.',v:[120,220]},
+    {n:'Spicy Mushroom n Onion Pizza',v:[170,270]},
+    {n:'Hot n Tangy Paneer Pizza',v:[180,280]},
+    {n:'Classic Vegitino Pizza',d:'Bell peppers, onions and tomatoes with herbs and cheese.',v:[170,270]},
+    {n:'Veg BBQ Pizza',v:[170,270]},
+    {n:'Duet of Corn Pizza',v:[170,270]},
+    {n:'Margarita Pizza',v:[170,270]},
+  ]},
+  {id:'thai',t:'Thai, Chinese & more',src:'cafe',items:[
+    {n:'Basil n Chilli Paneer Stir Fry',d:'Gravy',p:130},
+    {n:'Vegetable Stir Fry',d:'Gravy',p:120},
+    {n:'Thai Chilli Basil Noodles / Rice',p:100},
+    {n:'Szechuan Noodles / Rice',p:100},
+    {n:'Thai Green Curry with Rice',p:160},
+    {n:'Thai Red Curry with Rice',p:160},
+  ]},
+  {id:'sides',t:'Sides',src:'cafe',items:[
+    {n:'French Fries / Masala Fries',v:[60,70],lbl:['Classic','Masala']},
+    {n:'Game of Fries',d:'Fries topped with tomato salsa, cheese sauce and aioli, with grated cheese.',p:100},
+    {n:'Cheese Corn Nuggets',d:'8 pieces',p:70},
+    {n:'Baked Nachos',d:'Nachos with baked beans, salsa and cheese dip.',p:120},
+    {n:'Stuffed Chilli Garlic Cheese Bread',p:100},
+  ],note:'Add extra cheese / dip / salsa / baked beans @ ₹30'},
+  {id:'salads',t:'Salads',src:'cafe',items:[
+    {n:'Vegetables in Aioli',d:'Grilled zucchini and corn with tomatoes, bell peppers, onion rings and lettuce in creamy aioli with croutons.',p:130},
+    {n:'Greek Salad',d:'Assorted vegetables in lemon dressing, topped with cheese chunks and olives.',p:130},
+    {n:'Egg Salad',d:'Scrambled egg in creamy garlic sauce, chopped chilli, onion rings and lettuce.',p:140,nv:1},
+    {n:'The Crispy Nachos Salad',d:'Crispy nachos with tomato salsa, shredded lettuce, bell peppers and jalapeño.',p:150},
+    {n:'Coleslaw Salad',p:100},
+  ],note:'Add vegetables (any one) / cheese @ ₹30 — mushroom, broccoli, zucchini, baby corn, bell peppers, jalapeño, olives'},
+  {id:'jain',t:'Jain food',src:'cafe',items:[
+    {n:'Classic Cheese Pocket',tag:'Must try',p:90},
+    {n:'Jain Sandwich',p:100},
+    {n:'Alfredo Pasta',p:180},
+    {n:'Vegitino Pizza',v:[170,270],lbl:['Regular','Medium']},
+    {n:'Veg Burrito',p:140},
+    {n:'Quesadilla',p:150},
+  ]},
+  {id:'desserts',t:'Desserts',src:'zomato',items:[
+    {n:'Berry Pannacotta',p:209},
+    {n:'Coffee Pannacotta',d:'Chilled Italian set cream infused with coffee.',p:209},
+    {n:'Tiramisu',d:'Plated dessert',p:279},
+    {n:'Chocolate & Walnut Brownie',d:'With ice cream',p:219},
+    {n:'Hot Chocolate Mud Cake',d:'With ice cream',p:209},
+    {n:'Pineapple Upside-Down Slice',d:'With vanilla ice cream',p:190},
+    {n:'Nutella Bombolini',d:'Nutella-filled doughnut',p:99},
+    {n:'Chocolate Donut',p:85},
+  ]},
+  {id:'cakes',t:'Cakes & pastries',src:'zomato',items:[
+    {n:'Dutch Truffle Pastry',p:130},
+    {n:'Pure Truffle Pastry',p:140},
+    {n:'Blueberry Cheesecake Pastry',p:230},
+    {n:'Lotus Biscoff Cheesecake Pastry',p:240},
+    {n:'Nutella Cheesecake Pastry',p:230},
+    {n:'Chocolate Orange Marzipan Pastry',p:150},
+    {n:'Dutch Truffle Cake',v:[520,1040],lbl:['500 g','1 kg']},
+    {n:'Red Velvet Cream Cheesecake',d:'500 g',p:620},
+    {n:'Rasmalai Cake',d:'500 g',p:599},
+    {n:'Saffron & Almond Cake',d:'500 g',p:580},
+    {n:'Mawa Cake',d:'400 g — rich, buttery tea-time cake',p:480},
+    {n:'Sugar-free Date Cake',d:'400 g',p:480},
+  ]},
+  {id:'drinks',t:'Drinks & shakes',src:'zomato',items:[
+    {n:'Classic Cold Coffee',p:140},
+    {n:'Hazelnut Cold Coffee',p:175},
+    {n:'Oreo Shake',d:'With a scoop of ice cream, more Oreos and truffle',p:229},
+    {n:'Lotus Biscoff Milkshake',p:259},
+    {n:'Hot Chocolate',d:'45% dark chocolate',p:179},
+    {n:'Virgin Mojito',p:139},
+    {n:'Passionfruit Mojito',p:139},
+    {n:'Yuzu n Lime',p:179},
+    {n:'Basil Iced Tea',p:149},
+    {n:'Mixed Berry Chiller',p:149},
+  ]},
+];
+const catsEl=document.getElementById('cats'),mbody=document.getElementById('mbody');
+let cur=MENU[0].id;
+function price(it,c){
+  if(!it.v)return `<span class="pr">₹${it.p}</span>`;
+  const l=c.cols?[]:it.lbl||[];
+  return `<span class="pr">${it.v.map((p,i)=>(l[i]?`<small>${l[i]}</small>`:'')+'₹'+p).join(' · ')}</span>`;
+}
+function render(){
+  catsEl.innerHTML=MENU.map(c=>`<button class="cat${c.id===cur?' on':''}" role="tab" aria-selected="${c.id===cur}" data-id="${c.id}">${c.t.replace('…','')}</button>`).join('');
+  const c=MENU.find(x=>x.id===cur);
+  const sub=c.cols?c.cols.join(' · '):(c.src==='zomato'?'Zomato delivery prices':'Café menu');
+  mbody.innerHTML=`<div class="mhead"><h3>${c.t}</h3><span class="src">${sub}</span></div>
+  <ul class="mlist">${c.items.map((it,i)=>`<li style="animation-delay:${i*40}ms"><div class="row"><span class="nm"><span class="vm${it.nv?' nv':''}" title="${it.nv?'Non-veg':'Veg'}"></span>${it.n}</span><span class="leader"></span>${price(it,c)}</div>${it.d||it.tag?`<p class="ds">${it.tag?`<span class="tag" style="margin-right:8px">${it.tag}</span>`:''}${it.d||''}</p>`:''}</li>`).join('')}</ul>
+  <div class="mnote"><span>${c.note?`<b>${c.note}</b>`:''}</span><span>Parcel charges ₹10 per parcel</span></div>`;
+}
+catsEl.addEventListener('click',e=>{const b=e.target.closest('.cat');if(!b)return;cur=b.dataset.id;render();catsEl.querySelector('.on').scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'})});
+render();
+
+/* ============ THEME ============ */
+const root=document.documentElement,mq=matchMedia('(prefers-color-scheme: dark)');
+const mode=()=>root.dataset.theme||(mq.matches?'dark':'light');
+function syncMode(){root.dataset.mode=mode();document.dispatchEvent(new Event('themechange'))}
+document.getElementById('theme').onclick=()=>{root.dataset.theme=mode()==='dark'?'light':'dark';try{localStorage.setItem('pk-theme',root.dataset.theme)}catch(e){}syncMode()};
+mq.addEventListener('change',()=>{if(!root.dataset.theme)syncMode()});
+syncMode();
+
+/* ============ UI ============ */
+document.getElementById('yr').textContent=new Date().getFullYear();
+const hdr=document.getElementById('hdr');
+addEventListener('scroll',()=>hdr.classList.toggle('solid',scrollY>30),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const mnav=document.getElementById('mnav');
+document.getElementById('burger').onclick=()=>mnav.classList.toggle('on');
+mnav.addEventListener('click',e=>{if(e.target.closest('a'))mnav.classList.remove('on')});
+requestAnimationFrame(()=>setTimeout(()=>document.body.classList.add('ready'),150));
+let mx=0,my=0;
+addEventListener('pointermove',e=>{mx=e.clientX/innerWidth*2-1;my=e.clientY/innerHeight*2-1},{passive:true});
+</script>
+<script src="scene.js"></script>
+</body>
+</html>
